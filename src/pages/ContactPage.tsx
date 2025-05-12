@@ -107,7 +107,7 @@ const ContactPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-heading font-semibold mb-4">Visit Us</h3>
               <p className="text-gray-400 mb-4">Our headquarters location</p>
-              <p className="text-white font-semibold">6th Floor, Gamma Block, Sigma Soft Tech Park</p>
+              <p className="text-white font-semibold">6th Floor, Suite No: 10, Gamma Block, Sigma Soft Tech Park</p>
             </Card>
           </motion.div>
         </div>

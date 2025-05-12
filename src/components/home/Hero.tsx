@@ -34,7 +34,7 @@ const Hero: React.FC = () => {
           >
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold font-heading leading-tight mb-6">
               <span className="neon-text">Future-Ready</span> <br />
-              <span>Technology Solutions</span>
+              <span>Basel Dynamic Tech Solutions</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-lg">
               Custom IT services and software applications engineered to perfection. Transforming ideas into reality.

@@ -23,6 +23,8 @@ const ContactPage: React.FC = () => {
 
     formData.append("access_key", "da3d0f25-8051-46a6-9645-b7442c0c75a1");
 
+    // formData.append("access_key", "a5c2062e-76d9-422c-b565-539e8f7981a4");   Office mail
+
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
       body: formData
@@ -128,7 +130,7 @@ const ContactPage: React.FC = () => {
                 <tbody>
                   <tr>
                     <td className="py-2">Monday - Friday:</td>
-                    <td className="py-2">10:00 AM - 7:00 PM</td>
+                    <td className="py-2">10:00 AM - 4:00 AM</td>
                   </tr>
                   <tr>
                     <td className="py-2">Saturday - Sunday</td>
@@ -148,10 +150,10 @@ const ContactPage: React.FC = () => {
                         }
                         
                         const isOpen = (hours > 10 || (hours === 10 && minutes >= 0)) && 
-                                      (hours < 21 || (hours === 21 && minutes === 0));
+                                      (hours < 28  || (hours === 28 && minutes === 0));
                         
                         return isOpen 
-                          ? <span className="text-green-400">Open - Closes at 7:00 PM</span>
+                          ? <span className="text-green-400">Open - Closes at 4:00 AM</span>
                           : <span className="text-red-400">Closed - Opens at 10:00 AM</span>;
                       })()}
                     </td>

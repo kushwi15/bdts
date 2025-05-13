@@ -11,10 +11,10 @@ const Loader: React.FC = () => {
           <img 
             src="/bdtslogo.png" 
             alt="BASEL DYNAMICS TECH Logo"
-            className="h-75 w-75 animate-spin-slow" 
+            className="h-24 w-24 animate-spin-slow" 
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-60 w-60 rounded-full border-t-2 border-b-2 border-primary-500 animate-spin"></div> {/* Increased from h-16 w-16 */}
+            <div className="h-16 w-16 rounded-full border-t-2 border-b-2 border-primary-500 animate-spin"></div> {/* Increased from h-16 w-16 */}
           </div>
         </div>
         <h2 className="font-heading text-2xl mt-8 neon-text text-center">

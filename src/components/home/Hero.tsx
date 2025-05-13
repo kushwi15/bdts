@@ -19,22 +19,26 @@ const Hero: React.FC = () => {
 
   return (
     <div className="relative min-h-screen flex items-center overflow-hidden">
-      {/* ThreeJS Background */}
-      <div className="absolute inset-0 z-0">
+      {/* ThreeJS Background - now positioned differently on mobile */}
+      <div className="absolute inset-0 z-0 lg:block">
         <ThreeJSHero />
       </div>
       
       {/* Content */}
-      <div className="container-custom relative z-10 pt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div className="container-custom relative z-10 pt-12 lg:pt-20">
+        <div className="grid grid-cols-1 gap-8 items-center">
+          {/* Text content - always comes first in DOM */}
           <motion.div 
+            className="order-1 lg:order-none"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold font-heading leading-tight mb-6">
               <span className="neon-text">Future-Ready</span> <br />
-              <span>Basel Dynamic Tech Solutions</span>
+              <span>Basel Dynamic </span><br />
+              <span>Tech Solutions</span>
+
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-lg">
               Custom IT services and software applications engineered to perfection. Transforming ideas into reality.
@@ -52,24 +56,16 @@ const Hero: React.FC = () => {
                 </Button>
               </Link>
             </div>
-            
-            {/* <div className="mt-12 flex items-center text-gray-400">
-              <span className="mr-4">Our Clients:</span>
-              <div className="flex space-x-6">
-                <img src="https://via.placeholder.com/80x30/2C2C2C/FFFFFF?text=Client" alt="Client" className="h-8 opacity-70 hover:opacity-100 transition-opacity" />
-                <img src="https://via.placeholder.com/80x30/2C2C2C/FFFFFF?text=Client" alt="Client" className="h-8 opacity-70 hover:opacity-100 transition-opacity" />
-                <img src="https://via.placeholder.com/80x30/2C2C2C/FFFFFF?text=Client" alt="Client" className="h-8 opacity-70 hover:opacity-100 transition-opacity" />
-              </div>
-            </div> */}
           </motion.div>
           
+          {/* 3D Logo placeholder - shown only on mobile and positioned below */}
           <motion.div 
-            className="hidden lg:block"
+            className="lg:hidden mt-12 h-64 flex items-center justify-center order-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            {/* This space is for the 3D animation that's rendered in the background */}
+
           </motion.div>
         </div>
       </div>

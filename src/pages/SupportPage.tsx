@@ -279,7 +279,7 @@ const SupportPage: React.FC = () => {
               <p className="text-gray-400 mb-2">Technical Support</p>
               <p className="text-xl font-medium mb-6">+91 80 1234 5678</p>
               <div className="text-gray-400">
-                <p>Monday - Friday: 10 AM - 7 PM</p>
+                <p>Monday - Friday: 10 AM - 4 AM</p>
                 <p>Saturday - Sunday: Closed</p>
               </div>
             </Card>

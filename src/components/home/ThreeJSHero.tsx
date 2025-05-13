@@ -1,37 +1,126 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Floating Logo component
-const FloatingLogo = () => {
+// HeroModel components (replacing FloatingLogo)
+const LogoCube: React.FC = () => {
   const meshRef = useRef<THREE.Mesh>(null);
   
+  // Animate the cube
   useFrame((state) => {
     if (!meshRef.current) return;
     
-    // Gentle floating animation
-    meshRef.current.position.y = Math.sin(state.clock.getElapsedTime() * 0.5) * 0.2;
+    // Gentle rotation
+    meshRef.current.rotation.y = Math.sin(state.clock.getElapsedTime() * 0.2) * 0.1 + state.clock.getElapsedTime() * 0.1;
+    meshRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.4) * 0.05;
     
-    // Slow rotation
-    meshRef.current.rotation.y += 0.005;
+    // Subtle hover effect
+    meshRef.current.position.y = Math.sin(state.clock.getElapsedTime()) * 0.1;
   });
-  
+
+  // Materials
+  const primaryColor = new THREE.Color('#ff9500'); // Orange
+  const accentColor = new THREE.Color('#faa307'); // Gold
+  const baseColor = new THREE.Color('#1a1a1a');
+
+  // Material with glow effect for the orange parts
+  const glowingMaterial = new THREE.MeshStandardMaterial({
+    color: primaryColor,
+    emissive: primaryColor,
+    emissiveIntensity: 0.5,
+    metalness: 0.8,
+    roughness: 0.2,
+  });
+
+  // Material for gold parts
+  const goldMaterial = new THREE.MeshStandardMaterial({
+    color: accentColor,
+    emissive: accentColor,
+    emissiveIntensity: 0.3,
+    metalness: 0.9,
+    roughness: 0.1,
+  });
+
+  // Base cube material
+  const baseMaterial = new THREE.MeshStandardMaterial({
+    color: baseColor,
+    metalness: 0.5,
+    roughness: 0.2,
+  });
+
   return (
-    <mesh ref={meshRef} position={[0, 0, 0]}>
-      <torusGeometry args={[1.5, 0.5, 16, 100]} />
-      <meshStandardMaterial 
-        color="#ff9d26"
-        emissive="#ff9d26"
-        emissiveIntensity={0.5}
-        metalness={0.8}
-        roughness={0.2}
-      />
-    </mesh>
+    <group ref={meshRef}>
+      {/* Base cube */}
+      <mesh receiveShadow castShadow scale={[3, 3, 3]} material={baseMaterial}>
+        <boxGeometry args={[1, 1, 1]} />
+      </mesh>
+      
+      {/* Top bar */}
+      <mesh 
+        receiveShadow 
+        castShadow 
+        position={[0, 0.4, 0.51]} 
+        material={glowingMaterial}
+      >
+        <boxGeometry args={[1.8, 0.2, 0.02]} />
+      </mesh>
+      
+      {/* Middle bar */}
+      <mesh 
+        receiveShadow 
+        castShadow 
+        position={[0, 0, 0.51]} 
+        material={glowingMaterial}
+      >
+        <boxGeometry args={[1.2, 0.2, 0.02]} />
+      </mesh>
+      
+      {/* Bottom bar left */}
+      <mesh 
+        receiveShadow 
+        castShadow 
+        position={[-0.3, -0.4, 0.51]} 
+        material={goldMaterial}
+      >
+        <boxGeometry args={[0.8, 0.2, 0.02]} />
+      </mesh>
+      
+      {/* Bottom bar right */}
+      <mesh 
+        receiveShadow 
+        castShadow 
+        position={[0.6, -0.4, 0.51]} 
+        material={goldMaterial}
+      >
+        <boxGeometry args={[0.4, 0.2, 0.02]} />
+      </mesh>
+      
+      {/* Side decorative elements */}
+      <mesh 
+        receiveShadow 
+        castShadow 
+        position={[0.51, 0.2, 0]} 
+        rotation={[0, Math.PI/2, 0]}
+        material={glowingMaterial}
+      >
+        <boxGeometry args={[0.4, 0.05, 0.02]} />
+      </mesh>
+      
+      <mesh 
+        receiveShadow 
+        castShadow 
+        position={[-0.51, -0.2, 0]} 
+        rotation={[0, Math.PI/2, 0]}
+        material={goldMaterial}
+      >
+        <boxGeometry args={[0.4, 0.05, 0.02]} />
+      </mesh>
+    </group>
   );
 };
 
-// Particles effect
+// Particles effect (same as original)
 const Particles = () => {
   const points = useRef<THREE.Points>(null);
   const particleCount = 500;
@@ -92,7 +181,7 @@ const Particles = () => {
   );
 };
 
-// Grid plane
+// Grid plane (same as original)
 const Grid = () => {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
@@ -111,19 +200,27 @@ const Grid = () => {
 
 const ThreeJSHero: React.FC = () => {
   return (
-    <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
+    <Canvas camera={{ position: [3, 0, 8], fov: 60 }}>
       <fog attach="fog" args={['#000000', 5, 25]} />
       <ambientLight intensity={0.2} />
       <pointLight position={[10, 10, 10]} intensity={1} color="#ff9d26" />
       <pointLight position={[-10, -10, -10]} intensity={0.5} color="#ffcc26" />
       
-      <FloatingLogo />
+      <Environment preset="night" />
+      
+      <group position={[5, 0, 0]}>
+        <LogoCube />
+      </group> {/* Now positioned at [3, 0, 0] */}
       <Particles />
       <Grid />
       
-      <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
+      <OrbitControls 
+        enableZoom={false} 
+        enablePan={false} 
+        autoRotate
+        autoRotateSpeed={0.5}
+      />
     </Canvas>
   );
 };
-
 export default ThreeJSHero;

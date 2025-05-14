@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
 import Logo from '../ui/Logo';
 
 const navigation = [
@@ -16,6 +16,11 @@ const navigation = [
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+  });
   const location = useLocation();
 
   useEffect(() => {
@@ -32,8 +37,18 @@ const Navbar: React.FC = () => {
     };
   }, [scrolled]);
 
+  useEffect(() => {
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', darkMode);
+    window.dispatchEvent(new Event('theme-changed'));
+  }, [darkMode]);
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <header 
+    <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled ? 'bg-dark-800/90 backdrop-blur-md py-2 shadow-lg' : 'bg-transparent py-4'
       }`}
@@ -43,8 +58,8 @@ const Navbar: React.FC = () => {
           <Logo className="h-10 w-auto" />
           <span className="text-lg font-heading font-bold hidden sm:block neon-text">Basel Dynamics Tech</span>
         </Link>
-        
-        <div className="hidden lg:flex items-center space-x-8">
+
+        <div className="hidden lg:flex items-center space-x-6">
           {navigation.map((item) => (
             <Link
               key={item.name}
@@ -56,15 +71,31 @@ const Navbar: React.FC = () => {
               {item.name}
             </Link>
           ))}
-          <Link
-            to="/contact#demo"
-            className="btn-primary text-sm"
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
           >
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+
+          <Link to="/contact#demo" className="btn-primary text-sm">
             Request Demo
           </Link>
         </div>
-        
-        <div className="lg:hidden">
+
+        <div className="flex items-center lg:hidden space-x-4">
+          {/* Theme Toggle Button for mobile */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full text-gray-300 hover:text-white focus:outline-none"
+            aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
+          >
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+
           <button
             type="button"
             className="text-gray-300 hover:text-white"
@@ -79,8 +110,7 @@ const Navbar: React.FC = () => {
           </button>
         </div>
       </nav>
-      
-      {/* Mobile menu */}
+
       {mobileMenuOpen && (
         <div className="lg:hidden">
           <div className="glass-effect shadow-lg">

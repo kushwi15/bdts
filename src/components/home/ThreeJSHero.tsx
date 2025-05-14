@@ -210,7 +210,8 @@ const ThreeJSHero: React.FC = () => {
       
       <group position={[5, 0, 0]}>
         <LogoCube />
-      </group> {/* Now positioned at [3, 0, 0] */}
+      </group>
+      
       <Particles />
       <Grid />
       

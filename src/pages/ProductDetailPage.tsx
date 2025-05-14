@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle2, ExternalLink, ChevronLeft } from 'lucide-react';
@@ -118,6 +118,26 @@ const productDetails = {
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams();
   const product = productDetails[id as keyof typeof productDetails] || productDetails.default;
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleThemeChange = () => {
+        const currentTheme = localStorage.getItem('theme');
+        const shouldBeDark = currentTheme === 'dark';
+        setDarkMode(shouldBeDark);
+      };
+      window.addEventListener('theme-changed', handleThemeChange);
+      return () => window.removeEventListener('theme-changed', handleThemeChange);
+    }
+  }, []);
 
   useEffect(() => {
     document.title = `${product.name} | Basel Dynamics Tech Solutions`;
@@ -125,24 +145,24 @@ const ProductDetailPage: React.FC = () => {
   }, [product.name]);
 
   return (
-    <div className="pt-20">
+    <div className={`pt-20 ${darkMode ? 'bg-dark-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`}>
       {/* Hero Section */}
-      <Section className="bg-dark-800 py-16">
-        <Link to="/products" className="inline-flex items-center text-gray-400 hover:text-white mb-8">
+      <Section className={`py-16 shadow-md ${darkMode ? 'bg-dark-800' : 'bg-white'}`}>
+        <Link to="/products" className={`inline-flex items-center hover:text-primary-500 mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           <ChevronLeft size={20} className="mr-1" />
           <span>Back to Products</span>
         </Link>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">
+            <h1 className={`text-4xl md:text-5xl font-heading font-bold mb-4 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
               {product.name}
             </h1>
-            <p className="text-2xl text-gray-300 mb-6">
+            <p className={`text-2xl mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               {product.tagline}
             </p>
             <div className="mb-8">
@@ -152,63 +172,63 @@ const ProductDetailPage: React.FC = () => {
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" className={darkMode ? 'text-gray-300 border-gray-700 hover:bg-gray-700 hover:text-gray-100' : 'text-gray-600 border-gray-300 hover:bg-gray-300 hover:text-gray-800'}>
                   Get Pricing
                 </Button>
               </Link>
             </div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="rounded-lg overflow-hidden shadow-2xl">
-              <img 
-                src={product.image} 
-                alt={product.name} 
+              <img
+                src={product.image}
+                alt={product.name}
                 className="w-full h-auto"
               />
             </div>
           </motion.div>
         </div>
       </Section>
-      
+
       {/* Product Description */}
-      <Section>
+      <Section className="py-16">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-heading font-bold mb-6 neon-text">
+          <h2 className={`text-3xl font-heading font-bold mb-6 ${darkMode ? 'text-orange-400' : 'text-primary-500'}`}>
             Overview
           </h2>
-          <p className="text-xl text-gray-300 mb-12 leading-relaxed">
+          <p className={`text-xl mb-12 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             {product.description}
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
             <div>
-              <h3 className="text-2xl font-heading font-semibold mb-6">
+              <h3 className={`text-2xl font-heading font-semibold mb-6 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
                 Key Features
               </h3>
               <ul className="space-y-4">
                 {product.features.map((feature, index) => (
                   <li key={index} className="flex">
-                    <CheckCircle2 className="text-primary-500 mt-1 mr-3 flex-shrink-0" size={20} />
-                    <span className="text-gray-300">{feature}</span>
+                    <CheckCircle2 className={`mt-1 mr-3 flex-shrink-0 ${darkMode ? 'text-orange-400' : 'text-primary-500'}`} size={20} />
+                    <span className={`${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{feature}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            
+
             <div>
-              <h3 className="text-2xl font-heading font-semibold mb-6">
+              <h3 className={`text-2xl font-heading font-semibold mb-6 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
                 Benefits
               </h3>
               <ul className="space-y-4">
                 {product.benefits.map((benefit, index) => (
                   <li key={index} className="flex">
-                    <CheckCircle2 className="text-primary-500 mt-1 mr-3 flex-shrink-0" size={20} />
-                    <span className="text-gray-300">{benefit}</span>
+                    <CheckCircle2 className={`mt-1 mr-3 flex-shrink-0 ${darkMode ? 'text-orange-400' : 'text-primary-500'}`} size={20} />
+                    <span className={`${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{benefit}</span>
                   </li>
                 ))}
               </ul>
@@ -216,57 +236,57 @@ const ProductDetailPage: React.FC = () => {
           </div>
         </div>
       </Section>
-      
+
       {/* Use Cases */}
-      <Section className="bg-dark-800">
+      <Section className={`py-16 ${darkMode ? 'bg-dark-800' : 'bg-gray-100'}`}>
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-heading font-bold mb-10 neon-text">
+          <h2 className={`text-3xl font-heading font-bold mb-10 ${darkMode ? 'text-orange-400' : 'text-primary-500'}`}>
             Use Cases
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {product.useCases.map((useCase, index) => (
-              <div 
+              <div
                 key={index}
-                className="bg-dark-700 p-6 rounded-lg border border-dark-600 hover:border-primary-500 transition-colors duration-300"
+                className={`p-6 rounded-lg shadow-md border ${darkMode ? 'bg-dark-700 border-dark-700 hover:border-orange-400' : 'bg-white border-gray-200 hover:border-primary-500'} transition-colors duration-300`}
               >
-                <h3 className="text-xl font-heading font-semibold mb-3">
+                <h3 className={`text-xl font-heading font-semibold mb-3 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
                   Use Case {index + 1}
                 </h3>
-                <p className="text-gray-400">{useCase}</p>
+                <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{useCase}</p>
               </div>
             ))}
           </div>
         </div>
       </Section>
-      
+
       {/* Technical Specifications */}
-      <Section>
+      <Section className="py-16">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-heading font-bold mb-10 neon-text">
+          <h2 className={`text-3xl font-heading font-bold mb-10 ${darkMode ? 'text-orange-400' : 'text-primary-500'}`}>
             Technical Specifications
           </h2>
-          
-          <div className="bg-dark-700 rounded-lg p-8 border border-dark-600">
+
+          <div className={`rounded-lg p-8 shadow-md border ${darkMode ? 'bg-dark-700 border-dark-700' : 'bg-white border-gray-200'}`}>
             <ul className="space-y-4">
               {product.techSpecs.map((spec, index) => (
                 <li key={index} className="flex">
-                  <span className="text-primary-500 mr-3">•</span>
-                  <span className="text-gray-300">{spec}</span>
+                  <span className={`${darkMode ? 'text-orange-400' : 'text-primary-500'} mr-3`}>•</span>
+                  <span className={`${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{spec}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
       </Section>
-      
+
       {/* CTA Section */}
-      <Section className="bg-dark-900 border-t border-dark-700">
+      <Section className={`py-16 border-t ${darkMode ? 'bg-dark-800 border-dark-700' : 'bg-gray-200 border-gray-300'}`}>
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-heading font-bold mb-6">
-            Ready to Get Started with <span className="neon-text">{product.name}</span>?
+          <h2 className={`text-3xl font-heading font-bold mb-6 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+            Ready to Get Started with <span className={`${darkMode ? 'text-orange-400' : 'text-primary-500'}`}>{product.name}</span>?
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className={`text-xl mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Contact our team to schedule a personalized demo and discuss your specific requirements.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -276,7 +296,7 @@ const ProductDetailPage: React.FC = () => {
               </Button>
             </Link>
             <Link to="/contact">
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" className={darkMode ? 'text-gray-300 border-gray-700 hover:bg-gray-700 hover:text-gray-100' : 'text-gray-600 border-gray-300 hover:bg-gray-300 hover:text-gray-800'}>
                 Contact Sales
               </Button>
             </Link>

@@ -52,6 +52,7 @@ export default {
           100: '#505050',
           50: '#5a5a5a',
         },
+        darkMode: 'class',
         light: {
           900: '#ffffff',
           800: '#f0f0f0',
